@@ -62,17 +62,14 @@ public:
 		items.push_back("Plugin version: 0.1.0");
 		items.push_back("Plugin author: JokkeeZ");
 		items.push_back("");
-		items.push_back("Open-source libaries used:");
-		items.push_back("SharpDX.DirectInput:");
-		items.push_back("https://github.com/sharpdx/SharpDX/");
-
+		
 		if (m_initialized)
 		{
-			items.push_back("WheelInputController loaded: true");
+			items.push_back("WheelInputController active: true");
 		}
 		else
 		{
-			items.push_back("WheelInputController loaded: false");
+			items.push_back("WheelInputController active: false");
 		}
 
 		m_pGame->SetMenuColor(IRBRGame::MENU_TEXT);
@@ -88,15 +85,6 @@ public:
 
 				m_pGame->SetMenuColor(IRBRGame::MENU_TEXT);
 				m_pGame->SetFont(IRBRGame::FONT_SMALL);
-				continue;
-			}
-
-			if (i == 5)
-			{
-				m_pGame->SetMenuColor(IRBRGame::MENU_SELECTION);
-				m_pGame->WriteText(73.0f, 70.0f + (static_cast<float>(i) * 21.0f), items[i].c_str());
-
-				m_pGame->SetMenuColor(IRBRGame::MENU_TEXT);
 				continue;
 			}
 
