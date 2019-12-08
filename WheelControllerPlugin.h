@@ -8,9 +8,9 @@
 #include "IPlugin.h"
 #include "IRBRGame.h"
 #include "PluginHelper.h"
+#include "WheelInputController.h"
 
 #include "Gendef.h"
-#include <stdio.h>
 #include <string>
 #include <vector>
 
@@ -19,10 +19,24 @@ class WheelControllerPlugin : public IPlugin
 public:
 	WheelControllerPlugin(IRBRGame* pGame) : m_pGame(pGame)
 	{
-		const char* directoryPath = "./Plugins/WheelController/";
-		if (directoryExists(directoryPath) != 0)
+		m_WheelController = new WheelInputController;
+
+		if (!m_WheelController->initialize())
 		{
-			startWheelController();
+			m_initialized = false;
+			return;
+		}
+
+		if (!m_WheelController->acquireWheel())
+		{
+			m_initialized = false;
+			return;
+		}
+
+		m_initialized = true;
+
+		if (m_initialized) {
+			m_WheelController->start();
 		}
 	}
 
@@ -45,17 +59,26 @@ public:
 		m_pGame->WriteText(73.0f, 49.0f, "Wheel Controller");
 
 		std::vector<std::string> items;
-		items.push_back("Plugin version: 0.0.1");
+		items.push_back("Plugin version: 0.1.0");
 		items.push_back("Plugin author: JokkeeZ");
 		items.push_back("");
 		items.push_back("Open-source libaries used:");
 		items.push_back("SharpDX.DirectInput:");
 		items.push_back("https://github.com/sharpdx/SharpDX/");
 
+		if (m_initialized)
+		{
+			items.push_back("WheelInputController loaded: true");
+		}
+		else
+		{
+			items.push_back("WheelInputController loaded: false");
+		}
+
 		m_pGame->SetMenuColor(IRBRGame::MENU_TEXT);
 		m_pGame->SetFont(IRBRGame::FONT_SMALL);
 
-		for (int i = 0; i < items.size(); ++i)
+		for (unsigned int i = 0; i < items.size(); ++i)
 		{
 			if (i == 3)
 			{
@@ -90,5 +113,7 @@ public:
 
 private:
 	IRBRGame* m_pGame;
+	WheelInputController* m_WheelController;
+	bool m_initialized;
 };
 #endif

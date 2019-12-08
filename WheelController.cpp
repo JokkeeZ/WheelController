@@ -11,7 +11,6 @@ BOOL APIENTRY DllMain(HANDLE hModule,
 	return TRUE;
 }
 
-
 IPlugin* RBR_CreatePlugin(IRBRGame* pGame)
 {
 	return new WheelControllerPlugin(pGame);

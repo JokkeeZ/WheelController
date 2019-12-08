@@ -72,6 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -160,11 +161,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="WheelInputController.cpp" />
     <ClCompile Include="PluginHelper.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="WheelController.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="WheelInputController.h" />
     <ClInclude Include="Gendef.h" />
     <ClInclude Include="IPlugin.h" />
     <ClInclude Include="IRBRGame.h" />
@@ -174,6 +178,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="WheelController.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

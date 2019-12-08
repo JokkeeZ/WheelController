@@ -1,22 +1,34 @@
 #include "PluginHelper.h"
 
-int directoryExists(const char* path)
+void sendKey(int vk, bool extended)
 {
-	struct stat info;
+	KEYBDINPUT  kb = { 0 };
+	INPUT       Input = { 0 };
 
-	if (stat(path, &info) != 0)
-	{
-		return 0;
-	}
-	else if (info.st_mode & S_IFDIR)
-	{
-		return 1;
+	/* Generate a "key down" */
+	if (extended) {
+		kb.dwFlags = KEYEVENTF_EXTENDEDKEY;
 	}
 
-	return 0;
-};
+	kb.wVk = vk;
+	Input.type = INPUT_KEYBOARD;
+	Input.ki = kb;
 
-void startWheelController()
-{
-	system("start /B ./Plugins/WheelController/RBRWC.exe");
+	SendInput(1, &Input, sizeof(Input));
+
+	/* Generate a "key up" */
+	ZeroMemory(&kb, sizeof(KEYBDINPUT));
+
+	ZeroMemory(&Input, sizeof(INPUT));
+
+	kb.dwFlags = KEYEVENTF_KEYUP;
+
+	if (extended) {
+		kb.dwFlags |= KEYEVENTF_EXTENDEDKEY;
+	}
+
+	kb.wVk = vk;
+	Input.type = INPUT_KEYBOARD;
+	Input.ki = kb;
+	SendInput(1, &Input, sizeof(Input));
 };

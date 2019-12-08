@@ -16,3 +16,8 @@ int directoryExists(const char* path);
 */
 void startWheelController();
 
+/*
+	Send key to foreground window.
+*/
+void sendKey(int vk, bool extended);
+
