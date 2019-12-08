@@ -37,35 +37,32 @@ void WheelInputController::listenForInput()
 		m_device->GetDeviceState(sizeof(DIJOYSTATE), &m_deviceState);
 
 		if (m_deviceState.rgbButtons[5] != NULL) {
-
-			// Enter key
+			// Enter ('X' on wheel)
 			sendKey(13, false);
 		}
 
-		if (m_deviceState.rgbButtons[2] != NULL) {
-
-			// ESC key
+		if (m_deviceState.rgbButtons[4] != NULL) {
+			// ESC ('O' on wheel)
 			sendKey(27, false);
 		}
 
 		if (m_deviceState.rgdwPOV[0] == 0) {
-
-			// Up key
+			// Up (Arrow up on wheel)
 			sendKey(38, false);
 		}
 
 		if (m_deviceState.rgdwPOV[0] == 9000) {
-			// Right
+			// Right (Arrow right on wheel)
 			sendKey(39, false);
 		}
 
 		if (m_deviceState.rgdwPOV[0] == 18000) {
-			// Down
+			// Down (Arrow down on wheel)
 			sendKey(40, false);
 		}
 
 		if (m_deviceState.rgdwPOV[0] == 27000) {
-			// Left
+			// Left (Arrow left on wheel)
 			sendKey(37, false);
 		}
 

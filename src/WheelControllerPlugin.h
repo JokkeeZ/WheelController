@@ -21,14 +21,12 @@ public:
 	{
 		m_WheelController = new WheelInputController;
 
-		if (!m_WheelController->initialize())
-		{
+		if (!m_WheelController->initialize()) {
 			m_initialized = false;
 			return;
 		}
 
-		if (!m_WheelController->acquireWheel())
-		{
+		if (!m_WheelController->acquireWheel()) {
 			m_initialized = false;
 			return;
 		}
@@ -59,45 +57,31 @@ public:
 		m_pGame->WriteText(73.0f, 49.0f, "Wheel Controller");
 
 		std::vector<std::string> items;
-		items.push_back("Plugin version: 0.1.0");
+		items.push_back("Plugin version: 0.1.1");
 		items.push_back("Plugin author: JokkeeZ");
 		items.push_back("");
 		
-		if (m_initialized)
-		{
-			items.push_back("WheelInputController active: true");
+		if (m_initialized) {
+			items.push_back("Plugin input instance active: true");
 		}
-		else
-		{
-			items.push_back("WheelInputController active: false");
+		else {
+			items.push_back("Plugin input instance active: false");
 		}
 
 		m_pGame->SetMenuColor(IRBRGame::MENU_TEXT);
 		m_pGame->SetFont(IRBRGame::FONT_SMALL);
 
-		for (unsigned int i = 0; i < items.size(); ++i)
-		{
-			if (i == 3)
-			{
-				m_pGame->SetMenuColor(IRBRGame::MENU_HEADING);
-				m_pGame->SetFont(IRBRGame::FONT_BIG);
-				m_pGame->WriteText(73.0f, 70.0f + (static_cast<float>(i) * 21.0f), items[i].c_str());
-
-				m_pGame->SetMenuColor(IRBRGame::MENU_TEXT);
-				m_pGame->SetFont(IRBRGame::FONT_SMALL);
-				continue;
-			}
-
+		for (unsigned int i = 0; i < items.size(); ++i) {
 			m_pGame->WriteText(73.0f, 70.0f + (static_cast<float>(i) * 21.0f), items[i].c_str());
 		}
 	}
 
 	virtual void HandleFrontEndEvents(char txtKeyboard, bool bUp, bool bDown, bool bLeft, bool bRight, bool bSelect){}
-	virtual void DrawResultsUI() {}
-	virtual void TickFrontEndPage(float fTimeDelta) {}
-	virtual void StageStarted(int iMap, const char* ptxtPlayerName, bool bWasFalseStart) {}
+	virtual void DrawResultsUI(){}
+	virtual void TickFrontEndPage(float fTimeDelta){}
+	virtual void StageStarted(int iMap, const char* ptxtPlayerName, bool bWasFalseStart){}
 	virtual void HandleResults(float fCheckPoint1, float fCheckPoint2, float fFinishTime, const char* ptxtPlayerName){}
-	virtual void CheckPoint(float fCheckPointTime, int iCheckPointID, const char* ptxtPlayerName) {}
+	virtual void CheckPoint(float fCheckPointTime, int iCheckPointID, const char* ptxtPlayerName){}
 
 private:
 	IRBRGame* m_pGame;
