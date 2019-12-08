@@ -1,4 +1,4 @@
-#include "WheelInputController.h"
+﻿#include "WheelInputController.h"
 
 
 bool WheelInputController::initialize()
@@ -41,8 +41,8 @@ void WheelInputController::listenForInput()
 			sendKey(13, false);
 		}
 
-		if (m_deviceState.rgbButtons[4] != NULL) {
-			// ESC ('O' on wheel)
+		if (m_deviceState.rgbButtons[2] != NULL) {
+			// ESC ('△' on wheel)
 			sendKey(27, false);
 		}
 
