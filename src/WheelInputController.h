@@ -33,6 +33,11 @@ public:
 	void listenForInput();
 
 	/*
+		Initializes wheel capabilities.
+	*/
+	bool initCapabilities();
+
+	/*
 		Obtains access to the wheel.
 	*/
 	bool acquireWheel();
@@ -47,6 +52,9 @@ private:
 	IDirectInputDevice8* m_device;
 
 	DIJOYSTATE m_deviceState;
+	DIJOYSTATE m_deviceOldState;
+
 	std::thread m_thread;
+	bool m_requiresPolling;
 };
 

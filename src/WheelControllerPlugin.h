@@ -57,15 +57,15 @@ public:
 		m_pGame->WriteText(73.0f, 49.0f, "Wheel Controller");
 
 		std::vector<std::string> items;
-		items.push_back("Plugin version: 0.1.1");
+		items.push_back("Plugin version: 0.1.2");
 		items.push_back("Plugin author: JokkeeZ");
 		items.push_back("");
 		
 		if (m_initialized) {
-			items.push_back("Plugin input instance active: true");
+			items.push_back("Plugin running: true");
 		}
 		else {
-			items.push_back("Plugin input instance active: false");
+			items.push_back("Plugin running: false");
 		}
 
 		m_pGame->SetMenuColor(IRBRGame::MENU_TEXT);

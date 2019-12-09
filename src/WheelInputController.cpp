@@ -7,7 +7,7 @@ bool WheelInputController::initialize()
 		GetModuleHandle(NULL),
 		DIRECTINPUT_VERSION,
 		IID_IDirectInput8A,
-		(void**)&this->m_directInput,
+		(void**)&m_directInput,
 		NULL
 	);
 
@@ -15,12 +15,34 @@ bool WheelInputController::initialize()
 		return false;
 	}
 
-	if (FAILED(this->m_directInput->CreateDevice(GUID_Joystick, &this->m_device, NULL))) {
+	if (FAILED(m_directInput->CreateDevice(GUID_Joystick, &m_device, NULL))) {
 		return false;
 	}
 
-	this->m_device->SetDataFormat(&c_dfDIJoystick);
-	this->m_device->SetCooperativeLevel(NULL, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE);
+	if (!initCapabilities()) {
+		return false;
+	}
+
+	m_device->SetDataFormat(&c_dfDIJoystick);
+	m_device->SetCooperativeLevel(NULL, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE);
+
+	return true;
+};
+
+bool WheelInputController::initCapabilities()
+{
+	DIDEVCAPS capabilities;
+	capabilities.dwSize = sizeof(DIDEVCAPS);
+
+	HRESULT result = m_device->GetCapabilities(&capabilities);
+	if (result != DI_OK) {
+		return false;
+	}
+
+	// Has flag that wheel requires polling.
+	if ((capabilities.dwFlags & DIDC_POLLEDDATAFORMAT) != 0) {
+		m_requiresPolling = true;
+	}
 
 	return true;
 };
@@ -34,39 +56,49 @@ void WheelInputController::listenForInput()
 {
 	while (true)
 	{
+		// Poll, if device requires it to return data.
+		if (m_requiresPolling) {
+			m_device->Poll();
+		}
+
 		m_device->GetDeviceState(sizeof(DIJOYSTATE), &m_deviceState);
 
-		if (m_deviceState.rgbButtons[5] != NULL) {
+		if (m_deviceState.rgbButtons[5] != NULL && m_deviceOldState.rgbButtons[5] != m_deviceState.rgbButtons[5]) {
 			// Enter ('X' on wheel)
 			sendKey(13, false);
 		}
 
-		if (m_deviceState.rgbButtons[2] != NULL) {
+		if (m_deviceState.rgbButtons[2] != NULL && m_deviceOldState.rgbButtons[2] != m_deviceState.rgbButtons[2]) {
 			// ESC ('△' on wheel)
 			sendKey(27, false);
 		}
 
-		if (m_deviceState.rgdwPOV[0] == 0) {
+		// Some drivers report a value of 65,535, instead of -1, for the center position.
+		bool POVCentered = (LOWORD(m_deviceState.rgdwPOV[0]) == 0xFFFF);
+		int centerValue = POVCentered ? 0xFFFF : -1;
+
+		if (m_deviceState.rgdwPOV[0] == 0 && m_deviceOldState.rgdwPOV[0] == centerValue) {
 			// Up (Arrow up on wheel)
 			sendKey(38, false);
 		}
 
-		if (m_deviceState.rgdwPOV[0] == 9000) {
+		if (m_deviceState.rgdwPOV[0] == 9000 && m_deviceOldState.rgdwPOV[0] == centerValue) {
 			// Right (Arrow right on wheel)
 			sendKey(39, false);
 		}
 
-		if (m_deviceState.rgdwPOV[0] == 18000) {
+		if (m_deviceState.rgdwPOV[0] == 18000 && m_deviceOldState.rgdwPOV[0] == centerValue) {
 			// Down (Arrow down on wheel)
 			sendKey(40, false);
 		}
 
-		if (m_deviceState.rgdwPOV[0] == 27000) {
+		if (m_deviceState.rgdwPOV[0] == 27000 && m_deviceOldState.rgdwPOV[0] == centerValue) {
 			// Left (Arrow left on wheel)
 			sendKey(37, false);
 		}
 
-		Sleep(150);
+		m_deviceOldState = m_deviceState;
+		Sleep(25);
 	}
 }
 
