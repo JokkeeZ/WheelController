@@ -22,17 +22,17 @@ public:
 	WheelControllerPlugin(IRBRGame* pGame) : m_pGame(pGame)
 	{
 		// FOR DEBUGGING!
-		//AllocConsole();
-		//freopen("CONOUT$", "w", stdout);
+		AllocConsole();
+		freopen("CONOUT$", "w", stdout);
 
-		m_WheelController = new WheelInputController;
+		m_wheelController = new WheelInputController;
 
-		if (!m_WheelController->initialize()) {
+		if (!m_wheelController->initialize()) {
 			m_initialized = false;
 			return;
 		}
 
-		if (!m_WheelController->acquireWheel()) {
+		if (!m_wheelController->acquireWheel()) {
 			m_initialized = false;
 			return;
 		}
@@ -41,7 +41,7 @@ public:
 		std::cout << "Plugin initialized." << std::endl;
 
 		if (m_initialized) {
-			m_WheelController->start();
+			m_wheelController->start();
 		}
 	}
 
@@ -51,7 +51,6 @@ public:
 	{
 		return "WheelController";
 	}
-
 
 	virtual void DrawFrontEndPage()
 	{
@@ -66,7 +65,6 @@ public:
 		std::vector<std::string> items;
 		items.push_back("Plugin version: 0.1.3");
 		items.push_back("Plugin author: JokkeeZ");
-		items.push_back("");
 		
 		if (m_initialized) {
 			items.push_back("Plugin running: true");
@@ -76,7 +74,6 @@ public:
 		}
 
 		m_pGame->SetMenuColor(IRBRGame::MENU_TEXT);
-		m_pGame->SetFont(IRBRGame::FONT_SMALL);
 
 		for (unsigned int i = 0; i < items.size(); ++i) {
 			m_pGame->WriteText(73.0f, 70.0f + (static_cast<float>(i) * 21.0f), items[i].c_str());
@@ -92,7 +89,8 @@ public:
 
 private:
 	IRBRGame* m_pGame;
-	WheelInputController* m_WheelController;
+	WheelInputController* m_wheelController;
+
 	bool m_initialized;
 };
 #endif
