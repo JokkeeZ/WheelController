@@ -19,6 +19,19 @@
 class WheelInputController
 {
 public:
+	/*
+		Initializes an instance of the WheelInputController class, with default values.
+	*/
+	WheelInputController()
+	{
+		m_device = NULL;
+		m_directInput = NULL;
+
+		m_deviceState = {};
+		m_deviceOldState = {};
+
+		m_gameStateHandler = NULL;
+	};
 
 	/*
 		Initializes DirectInput device. (aka Racing wheel)
