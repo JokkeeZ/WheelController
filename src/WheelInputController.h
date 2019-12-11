@@ -7,8 +7,10 @@
 
 #include <dinput.h>
 #include <thread>
+#include <iostream>
 
 #include "PluginHelper.h"
+#include "GameStateHandler.h"
 
 /*
 	Reads wheel button input and sends them to rbr as keystrokes.
@@ -28,7 +30,7 @@ public:
 	void start();
 
 	/*
-		Creates an infinite loop, which checks if button X is pressed and if so, sends keystroke to RBR.
+		Creates an infinite loop, which checks if button is pressed and if so, sends keystroke to RBR.
 	*/
 	void listenForInput();
 
@@ -56,5 +58,7 @@ private:
 
 	std::thread m_thread;
 	bool m_requiresPolling;
+
+	GameStateHandler* m_gameStateHandler;
 };
 

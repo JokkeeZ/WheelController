@@ -1,6 +1,5 @@
 ﻿#include "WheelInputController.h"
 
-
 bool WheelInputController::initialize()
 {
 	HRESULT result = DirectInput8Create(
@@ -25,6 +24,9 @@ bool WheelInputController::initialize()
 
 	m_device->SetDataFormat(&c_dfDIJoystick);
 	m_device->SetCooperativeLevel(NULL, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE);
+
+	m_gameStateHandler = new GameStateHandler;
+	m_gameStateHandler->initialize();
 
 	return true;
 };
@@ -56,6 +58,31 @@ void WheelInputController::listenForInput()
 {
 	while (true)
 	{
+		if (m_gameStateHandler->isInitialized()) {
+			auto newGameState = m_gameStateHandler->getNewGameState();
+			auto currentGameState = m_gameStateHandler->getCurrentGameState();
+
+			if (currentGameState != newGameState) {
+				// Player is loading a stage or driving, so we don't need to have wheel access.
+				if (newGameState != GameStateHandler::GameState::Default) {
+					std::cout << "Wheel unacquired!" << std::endl;
+					unacquireWheel();
+				}
+
+				// Player stopped driving OR
+				// Player is in some menu OR
+				// Something where wheel buttons are not in driving use.
+				else {
+					std::cout << "Wheel acquired!" << std::endl;
+					acquireWheel();
+				}
+
+				// Lets save game state so we don't spam acquire/unacquire wheel.
+				m_gameStateHandler->setCurrentGameState(newGameState);
+				continue;
+			}
+		}
+
 		// Poll, if device requires it to return data.
 		if (m_requiresPolling) {
 			m_device->Poll();

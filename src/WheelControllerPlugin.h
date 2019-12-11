@@ -5,6 +5,7 @@
 // in the C/C++ / Commandline project configuration
 #define __SUPPORT_PLUGIN__ 1
 
+#include "stdafx.h"
 #include "IPlugin.h"
 #include "IRBRGame.h"
 #include "PluginHelper.h"
@@ -13,12 +14,17 @@
 #include "Gendef.h"
 #include <string>
 #include <vector>
+#include <iostream>
 
 class WheelControllerPlugin : public IPlugin
 {
 public:
 	WheelControllerPlugin(IRBRGame* pGame) : m_pGame(pGame)
 	{
+		// FOR DEBUGGING!
+		//AllocConsole();
+		//freopen("CONOUT$", "w", stdout);
+
 		m_WheelController = new WheelInputController;
 
 		if (!m_WheelController->initialize()) {
@@ -32,6 +38,7 @@ public:
 		}
 
 		m_initialized = true;
+		std::cout << "Plugin initialized." << std::endl;
 
 		if (m_initialized) {
 			m_WheelController->start();
@@ -57,7 +64,7 @@ public:
 		m_pGame->WriteText(73.0f, 49.0f, "Wheel Controller");
 
 		std::vector<std::string> items;
-		items.push_back("Plugin version: 0.1.2");
+		items.push_back("Plugin version: 0.1.3");
 		items.push_back("Plugin author: JokkeeZ");
 		items.push_back("");
 		
