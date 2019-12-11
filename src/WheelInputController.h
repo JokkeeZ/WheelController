@@ -8,6 +8,7 @@
 #include <dinput.h>
 #include <thread>
 #include <iostream>
+#include <map>
 
 #include "PluginHelper.h"
 #include "GameStateHandler.h"
@@ -57,8 +58,15 @@ private:
 	DIJOYSTATE m_deviceOldState;
 
 	std::thread m_thread;
-	bool m_requiresPolling;
+	bool m_requiresPolling = false;
 
 	GameStateHandler* m_gameStateHandler;
+
+	std::map<int, int> m_mapArrowButtons = {
+		{ 27000, 37 }, // Left
+		{ 0,	 38 }, // Up
+		{ 9000,  39 }, // Right
+		{ 18000, 40 }  // Down 
+	};
 };
 

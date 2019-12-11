@@ -69,15 +69,13 @@ void WheelInputController::listenForInput()
 					unacquireWheel();
 				}
 
-				// Player stopped driving OR
-				// Player is in some menu OR
-				// Something where wheel buttons are not in driving use.
+				// Player is in some menu/pause screen OR 
+				// somewhere where wheel buttons are not in driving use.
 				else {
 					std::cout << "Wheel acquired!" << std::endl;
 					acquireWheel();
 				}
 
-				// Lets save game state so we don't spam acquire/unacquire wheel.
 				m_gameStateHandler->setCurrentGameState(newGameState);
 				continue;
 			}
@@ -95,8 +93,8 @@ void WheelInputController::listenForInput()
 			sendKey(13, false);
 		}
 
-		if (m_deviceState.rgbButtons[2] != NULL && m_deviceOldState.rgbButtons[2] != m_deviceState.rgbButtons[2]) {
-			// ESC ('△' on wheel)
+		if (m_deviceState.rgbButtons[4] != NULL && m_deviceOldState.rgbButtons[4] != m_deviceState.rgbButtons[4]) {
+			// ESC ('O' on wheel)
 			sendKey(27, false);
 		}
 
@@ -104,24 +102,8 @@ void WheelInputController::listenForInput()
 		bool POVCentered = (LOWORD(m_deviceState.rgdwPOV[0]) == 0xFFFF);
 		int centerValue = POVCentered ? 0xFFFF : -1;
 
-		if (m_deviceState.rgdwPOV[0] == 0 && m_deviceOldState.rgdwPOV[0] == centerValue) {
-			// Up (Arrow up on wheel)
-			sendKey(38, false);
-		}
-
-		if (m_deviceState.rgdwPOV[0] == 9000 && m_deviceOldState.rgdwPOV[0] == centerValue) {
-			// Right (Arrow right on wheel)
-			sendKey(39, false);
-		}
-
-		if (m_deviceState.rgdwPOV[0] == 18000 && m_deviceOldState.rgdwPOV[0] == centerValue) {
-			// Down (Arrow down on wheel)
-			sendKey(40, false);
-		}
-
-		if (m_deviceState.rgdwPOV[0] == 27000 && m_deviceOldState.rgdwPOV[0] == centerValue) {
-			// Left (Arrow left on wheel)
-			sendKey(37, false);
+		if (m_deviceState.rgdwPOV[0] != centerValue && m_deviceOldState.rgdwPOV[0] != m_deviceState.rgdwPOV[0]) {
+			sendKey(m_mapArrowButtons[m_deviceState.rgdwPOV[0]], false);
 		}
 
 		m_deviceOldState = m_deviceState;
