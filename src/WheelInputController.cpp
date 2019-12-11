@@ -99,8 +99,7 @@ void WheelInputController::listenForInput()
 		}
 
 		// Some drivers report a value of 65,535, instead of -1, for the center position.
-		bool POVCentered = (LOWORD(m_deviceState.rgdwPOV[0]) == 0xFFFF);
-		int centerValue = POVCentered ? 0xFFFF : -1;
+		int centerValue = (LOWORD(m_deviceState.rgdwPOV[0]) == 0xFFFF) ? 0xFFFF : -1;
 
 		if (m_deviceState.rgdwPOV[0] != centerValue && m_deviceOldState.rgdwPOV[0] != m_deviceState.rgdwPOV[0]) {
 			sendKey(m_mapArrowButtons[m_deviceState.rgdwPOV[0]], false);
@@ -113,10 +112,6 @@ void WheelInputController::listenForInput()
 
 bool WheelInputController::acquireWheel()
 {
-	// TODO: Handle errors better:
-	// DIERR_INVALIDPARAM
-	// DIERR_NOTINITIALIZED
-	// DIERR_OTHERAPPHASPRIO
 	HRESULT result = m_device->Acquire();
 	return result == DI_OK;
 };
@@ -124,11 +119,5 @@ bool WheelInputController::acquireWheel()
 bool WheelInputController::unacquireWheel()
 {
 	HRESULT result = m_device->Unacquire();
-	
-	// Device was not acquired, operation had no effect.
-	if (result == DI_NOEFFECT) {
-		return false;
-	}
-
 	return result == DI_OK;
 };
